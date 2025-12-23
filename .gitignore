@@ -1,9 +1,12 @@
-# ========================================
-# .gitignore - App Didáctica CRUD Alumnos
-# ========================================
+# ===========================================================================
+# .gitignore - App Didactica CRUD de Alumnos
+# ===========================================================================
+# Archivos y carpetas que NO deben subirse al repositorio
+# ===========================================================================
 
-# ============ SEGURIDAD (CRÍTICO) ============
-# NUNCA subir archivos con credenciales reales
+# ===========================================================================
+# SEGURIDAD (CRITICO) - Nunca subir credenciales
+# ===========================================================================
 .env
 .env.local
 .env.*.local
@@ -11,7 +14,10 @@
 *.key
 secrets/
 
-# ============ PYTHON ============
+# ===========================================================================
+# PYTHON
+# ===========================================================================
+
 # Bytecode
 __pycache__/
 *.py[cod]
@@ -23,12 +29,14 @@ venv/
 .venv/
 env/
 ENV/
+.python-version
 
 # Distribution / packaging
 build/
 dist/
 *.egg-info/
 *.egg
+*.whl
 
 # Testing
 .pytest_cache/
@@ -36,49 +44,73 @@ dist/
 htmlcov/
 .tox/
 .nox/
+coverage.xml
+*.cover
 
 # Type checking
 .mypy_cache/
 .dmypy.json
+dmypy.json
 
-# ============ IDEs ============
+# ===========================================================================
+# IDEs y Editores
+# ===========================================================================
+
 # VS Code
 .vscode/
 *.code-workspace
 
-# PyCharm
+# PyCharm / JetBrains
 .idea/
+*.iml
 
 # Jupyter
 .ipynb_checkpoints/
 
-# ============ OS ============
+# Sublime Text
+*.sublime-workspace
+
+# ===========================================================================
+# SISTEMA OPERATIVO
+# ===========================================================================
+
 # Windows
 Thumbs.db
 ehthumbs.db
 Desktop.ini
 $RECYCLE.BIN/
+*.lnk
 
 # macOS
 .DS_Store
 .AppleDouble
 .LSOverride
 ._*
+.Spotlight-V100
+.Trashes
 
 # Linux
 *~
+.fuse_hidden*
+.Trash-*
 
-# ============ PROYECTO ============
+# ===========================================================================
+# PROYECTO
+# ===========================================================================
+
 # Logs
 *.log
 logs/
+npm-debug.log*
 
 # Temporales
 tmp/
 temp/
 *.tmp
+*.bak
+*.swp
 
-# Archivos de base de datos local (si se usa SQLite para tests)
+# Base de datos local (si se usa SQLite para tests)
 *.db
 *.sqlite
 *.sqlite3
@@ -86,10 +118,20 @@ temp/
 # Node (si se agregan herramientas de frontend)
 node_modules/
 
-# ============ VERCEL ============
+# ===========================================================================
+# DEPLOYMENT
+# ===========================================================================
+
+# Vercel
 .vercel/
 
-# ============ DOCKER ============
-# No ignorar Dockerfile ni docker-compose.yml
-# Solo ignorar datos locales de volúmenes
+# Docker (datos de volumenes, no config)
 docker-data/
+
+# ===========================================================================
+# NOTAS
+# ===========================================================================
+# .env.example SI debe subirse (es template sin secretos)
+# requirements.txt SI debe subirse
+# database/init.sql SI debe subirse
+# ===========================================================================

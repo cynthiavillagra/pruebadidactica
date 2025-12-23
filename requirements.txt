@@ -1,0 +1,104 @@
+# ===========================================================================
+# REQUIREMENTS.TXT - Dependencias del Proyecto
+# ===========================================================================
+# Proyecto: App Didactica CRUD de Alumnos
+# Version: 1.0.0
+# Python: 3.10+
+# ===========================================================================
+#
+# INSTRUCCIONES DE INSTALACION:
+#   1. Crear entorno virtual: python -m venv venv
+#   2. Activar (Windows): .\venv\Scripts\Activate
+#   3. Activar (Linux/Mac): source venv/bin/activate
+#   4. Instalar: pip install -r requirements.txt
+#
+# ===========================================================================
+
+
+# ---------------------------------------------------------------------------
+# CORE: Framework Web
+# ---------------------------------------------------------------------------
+
+# Flask: Micro-framework web minimalista
+# POR QUE FLASK: Didactico, minima magia, ideal para ensenar HTTP
+# POR QUE NO DJANGO: Demasiado opinionado para un CRUD simple
+# POR QUE NO FASTAPI: Requiere async, anade complejidad innecesaria
+Flask>=3.0.0
+
+# Werkzeug: Toolkit WSGI (viene con Flask, pero lo fijamos)
+# POR QUE FIJAR: Evitar conflictos de versiones
+Werkzeug>=3.0.0
+
+
+# ---------------------------------------------------------------------------
+# CONFIGURACION: Variables de Entorno
+# ---------------------------------------------------------------------------
+
+# python-dotenv: Carga variables desde .env
+# POR QUE: Separar configuracion del codigo (12-factor app)
+# POR QUE NO os.environ DIRECTO: .env es mas comodo en desarrollo
+python-dotenv>=1.0.0
+
+
+# ---------------------------------------------------------------------------
+# BASE DE DATOS: Cliente Supabase
+# ---------------------------------------------------------------------------
+
+# supabase: Cliente oficial para Supabase (PostgreSQL + Auth)
+# POR QUE: Integracion nativa con Supabase Auth y RLS
+# INCLUYE: postgrest-py, gotrue, realtime
+supabase>=2.0.0
+
+
+# ---------------------------------------------------------------------------
+# SEGURIDAD: JWT y Autenticacion
+# ---------------------------------------------------------------------------
+
+# PyJWT: Libreria para validar JSON Web Tokens
+# POR QUE: Validar tokens de Supabase en el backend
+# POR QUE NO jose: PyJWT es mas simple y suficiente
+PyJWT>=2.8.0
+
+
+# ---------------------------------------------------------------------------
+# UTILIDADES
+# ---------------------------------------------------------------------------
+
+# python-dateutil: Manejo avanzado de fechas
+# POR QUE: Parsing de fechas ISO8601 de Supabase
+python-dateutil>=2.8.0
+
+
+# ---------------------------------------------------------------------------
+# TESTING (Desarrollo)
+# ---------------------------------------------------------------------------
+
+# pytest: Framework de testing
+# POR QUE: Estandar de la industria, sintaxis limpia
+pytest>=8.0.0
+
+# pytest-cov: Cobertura de codigo
+# POR QUE: Medir que porcentaje del codigo esta testeado
+pytest-cov>=4.0.0
+
+
+# ---------------------------------------------------------------------------
+# DESARROLLO (Opcional - No instalar en produccion)
+# ---------------------------------------------------------------------------
+
+# httpx: Cliente HTTP moderno (para tests de integracion)
+# POR QUE: Mejor que requests para testing async
+httpx>=0.25.0
+
+
+# ===========================================================================
+# NOTAS DE COMPATIBILIDAD
+# ===========================================================================
+#
+# VERCEL: Estas dependencias son compatibles con Vercel Python Runtime
+# DOCKER: Funciona sin modificaciones
+# LOCAL: Funciona con Python 3.10+
+#
+# VERSIONES MINIMAS: Se usan >= para permitir actualizaciones de seguridad
+#
+# ===========================================================================
