@@ -1,7 +1,7 @@
 # 🔖 CHECKPOINT - Estado del Proyecto
 
-> **Última Actualización**: 2025-12-22 22:09 (UTC-3)  
-> **Versión del Documento**: 1.1.0
+> **Última Actualización**: 2025-12-22 22:17 (UTC-3)  
+> **Versión del Documento**: 1.2.0
 
 ---
 
@@ -9,9 +9,9 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Fase Actual** | Fase 3-A - Arquitectura y Patrones ✅ |
-| **Sprint** | Sprint 0 (Planificación) |
-| **Progreso General** | ███░░░░░░░ 30% |
+| **Fase Actual** | Fase 3-B - Modelado de Datos ✅ |
+| **Sprint** | Sprint 0 (Planificación/Diseño) |
+| **Progreso General** | ████░░░░░░ 40% |
 
 ---
 
@@ -42,15 +42,23 @@
 
 ---
 
-## 🏗️ Arquitectura Definida
+## 🏗️ Arquitectura y Modelado Definidos
 
+### Arquitectura
 | Aspecto | Decisión |
 |---------|----------|
 | **Patrón Arquitectónico** | Clean Architecture (Simplificada) |
 | **Capas** | Presentación → Aplicación → Dominio ← Infraestructura |
 | **Patrones de Diseño** | Repository, DI, Factory, Singleton, Adapter, Decorator |
 | **Estado** | Stateless (JWT + Supabase) |
-| **Timeout Inactividad** | 15 minutos (Watchdog en Frontend) |
+
+### Modelo de Datos
+| Aspecto | Decisión |
+|---------|----------|
+| **Entidad Principal** | `Alumno` (nombre, apellido, dni) |
+| **Identificador** | UUID v4 |
+| **Timestamps** | `created_at`, `updated_at` (UTC) |
+| **Seguridad BD** | RLS (Row Level Security) |
 
 ---
 
@@ -61,7 +69,6 @@
 | Archivo | Descripción | Estado |
 |---------|-------------|--------|
 | `docs/01_planificacion_analisis.md` | Requisitos, HU, CU, Riesgos | ✅ Completado |
-| `docs/CHECKPOINT.md` | Estado del proyecto | ✅ Actualizado |
 | `.gitignore` | Protección de archivos | ✅ Completado |
 
 ### Fase 3-A (Arquitectura) ✅
@@ -70,23 +77,29 @@
 |---------|-------------|--------|
 | `docs/02_a_arquitectura_patrones.md` | Arquitectura, patrones, stateless | ✅ Completado |
 
+### Fase 3-B (Modelado) ✅
+
+| Archivo | Descripción | Estado |
+|---------|-------------|--------|
+| `docs/02_b_modelado_datos.md` | DER, SQL, Diagrama de clases | ✅ Completado |
+
 ### Pendientes (Próximas Fases)
 
 | Archivo | Fase | Estado |
 |---------|------|--------|
-| `domain/entities/alumno.py` | 3-B | ⏳ Pendiente |
-| `domain/repositories/alumno_repository.py` | 3-B | ⏳ Pendiente |
-| `domain/exceptions.py` | 3-B | ⏳ Pendiente |
-| `infrastructure/supabase_client.py` | 4 | ⏳ Pendiente |
-| `infrastructure/supabase_alumno_repository.py` | 4 | ⏳ Pendiente |
-| `application/alumno_service.py` | 5 | ⏳ Pendiente |
-| `api/routes.py` | 6 | ⏳ Pendiente |
-| `api/middleware/auth.py` | 6 | ⏳ Pendiente |
-| `static/index.html` | 7 | ⏳ Pendiente |
-| `static/css/styles.css` | 7 | ⏳ Pendiente |
-| `static/js/app.js` | 7 | ⏳ Pendiente |
-| `tests/test_*.py` | 8 | ⏳ Pendiente |
-| `Dockerfile` | 9 | ⏳ Pendiente |
+| `domain/entities/alumno.py` | 4 | ⏳ Pendiente |
+| `domain/repositories/alumno_repository.py` | 4 | ⏳ Pendiente |
+| `domain/exceptions.py` | 4 | ⏳ Pendiente |
+| `infrastructure/supabase_client.py` | 5 | ⏳ Pendiente |
+| `infrastructure/supabase_alumno_repository.py` | 5 | ⏳ Pendiente |
+| `application/alumno_service.py` | 6 | ⏳ Pendiente |
+| `api/routes.py` | 7 | ⏳ Pendiente |
+| `api/middleware/auth.py` | 7 | ⏳ Pendiente |
+| `static/index.html` | 8 | ⏳ Pendiente |
+| `static/css/styles.css` | 8 | ⏳ Pendiente |
+| `static/js/app.js` | 8 | ⏳ Pendiente |
+| `tests/test_*.py` | 9 | ⏳ Pendiente |
+| `Dockerfile` | 10 | ⏳ Pendiente |
 | `vercel.json` | 10 | ⏳ Pendiente |
 
 ---
@@ -95,25 +108,14 @@
 
 | Decisión | Opción Elegida | Justificación |
 |----------|----------------|---------------|
-| Framework Backend | Flask | Micro-framework didáctico, mínima magia |
-| Base de Datos | Supabase (PostgreSQL) | Gratuito, Auth incluido, panel visual |
-| Frontend | Vanilla JS | Sin build tools, código transparente |
+| Framework Backend | Flask | Micro-framework didáctico |
+| Base de Datos | Supabase (PostgreSQL) | Gratuito, Auth incluido |
+| Frontend | Vanilla JS | Sin build tools |
 | Auth Flow | Frontend → Supabase SDK | Backend solo valida JWT |
 | Arquitectura | Clean Architecture | Separación de responsabilidades |
-| Stateless | Obligatorio | Compatible con Vercel serverless |
-| Patrón Datos | Repository | Abstrae BD, permite mocks |
-| Inyección | Dependency Injection | Testeable y flexible |
-
----
-
-## ⚠️ Riesgos Identificados
-
-| ID | Riesgo | Nivel | Mitigación |
-|----|--------|-------|------------|
-| R-001 | Memoria volátil serverless | 🔴 Crítico | Arquitectura 100% stateless |
-| R-002 | Credenciales en código | 🔴 Crítico | Variables de entorno obligatorias |
-| R-003 | JWT expirado | 🟡 Alto | Validación en cada request |
-| R-004 | Sesión zombie | 🟡 Alto | Watchdog 15 minutos |
+| Stateless | Obligatorio | Compatible con serverless |
+| ID de Entidades | UUID v4 | Seguro, distribuido |
+| Timestamps | UTC | Consistencia global |
 
 ---
 
@@ -121,14 +123,15 @@
 
 | Fecha | Commit | Archivos |
 |-------|--------|----------|
-| 2025-12-22 | `docs: add initial planning (Phase 1-2)` | `docs/01_planificacion_analisis.md`, `docs/CHECKPOINT.md`, `.gitignore` |
-| 2025-12-22 | `docs: architecture patterns (Phase 3-A)` | `docs/02_a_arquitectura_patrones.md`, `docs/CHECKPOINT.md` |
+| 2025-12-22 | `docs: add initial planning (Phase 1-2)` | `docs/01_planificacion_analisis.md`, `.gitignore` |
+| 2025-12-22 | `docs: architecture patterns (Phase 3-A)` | `docs/02_a_arquitectura_patrones.md` |
+| 2025-12-22 | `docs: data model and class diagrams (Phase 3-B)` | `docs/02_b_modelado_datos.md` |
 
 ---
 
 ## 🚀 Siguiente Paso Sugerido
 
-### Fase 3-B: Implementación de Capa de Dominio
+### Fase 4: Implementación de Capa de Dominio
 
 **Tareas a realizar**:
 1. Implementar entidad `Alumno` con validaciones
@@ -147,11 +150,16 @@ domain/
 │   ├── __init__.py
 │   └── alumno_repository.py  # Interface ABC
 └── exceptions.py          # Excepciones de dominio
+
+tests/
+├── __init__.py
+└── test_alumno.py         # Tests de la entidad
 ```
 
 **Prerequisitos**:
 - [x] Planificación completada
 - [x] Arquitectura definida
+- [x] Modelo de datos definido
 - [ ] Aprobación del usuario para continuar
 
 ---
@@ -175,8 +183,18 @@ FLASK_DEBUG=1
 
 - [x] Proyecto creado en Supabase
 - [x] Tabla `alumnos` creada con schema
-- [ ] Variables de entorno configuradas localmente
 - [ ] RLS (Row Level Security) configurado
+- [ ] Variables de entorno configuradas localmente
+
+---
+
+## 🔗 Repositorio Remoto
+
+| Campo | Valor |
+|-------|-------|
+| **URL** | https://github.com/cynthiavillagra/pruebadidactica |
+| **Rama Principal** | `main` |
+| **Estado** | ✅ Sincronizado |
 
 ---
 
