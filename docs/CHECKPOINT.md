@@ -1,7 +1,7 @@
 # CHECKPOINT - Estado del Proyecto
 
-> **Ultima Actualizacion**: 2025-12-22 23:33 (UTC-3)  
-> **Version del Documento**: 2.0.0
+> **Ultima Actualizacion**: 2025-12-22 23:39 (UTC-3)  
+> **Version del Documento**: 2.1.0
 
 ---
 
@@ -9,83 +9,74 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Fase Actual** | PROYECTO COMPLETO |
-| **Sprint** | Sprint 1 (Implementacion) |
+| **Fase Actual** | Fase 5 - Testing Formal |
+| **Sprint** | Sprint 1 (Pruebas) |
 | **Progreso General** | 95% |
 
 ---
 
-## RESUMEN DE FASES COMPLETADAS
+## Fase 5: Testing Formal (EN PROGRESO)
 
-### Fase 1-2: Planificacion y Analisis
-- Requisitos funcionales y no funcionales
-- Historias de usuario y casos de uso
-- Analisis de riesgos
+### Archivos Generados
 
-### Fase 3-A: Arquitectura y Patrones
-- Clean Architecture definida
-- Patrones de diseno documentados
+| Archivo | Descripcion | Estado |
+|---------|-------------|--------|
+| `docs/plan_uat.md` | Plan de Pruebas de Aceptacion | OK |
+| `tests/__init__.py` | Init del paquete tests | OK |
+| `tests/test_alumno.py` | Tests de la entidad Alumno | OK |
+| `tests/test_alumno_service.py` | Tests del servicio | OK |
+| `tests/test_routes.py` | Tests de la API | OK |
+| `docs/manual_testing.md` | Manual de ejecucion | OK |
 
-### Fase 3-B: Modelado de Datos
-- DER y modelo fisico
-- Diagrama de clases
-- Script SQL para Supabase
+### Resumen de Tests
 
-### Fase 3-C: API y Dinamica
-- Endpoints REST definidos
-- Diagramas de secuencia
-- Estrategia de seguridad
+| Archivo | Clases | Tests Aproximados |
+|---------|--------|-------------------|
+| test_alumno.py | 6 | ~20 |
+| test_alumno_service.py | 6 | ~15 |
+| test_routes.py | 5 | ~15 |
+| **TOTAL** | 17 | ~50 |
 
-### Fase 3.5: Persistencia
-- Script database/init.sql
-- Manual de Supabase
+### Flujos UAT Definidos
 
-### Fase 4-A: Backend
-- Capa de dominio (entidades, repositorio, excepciones)
-- Capa de infraestructura (config, cliente Supabase)
-- Capa de aplicacion (servicio)
-- Capa de API (routes, middleware auth)
-
-### Fase 4-B: Frontend
-- HTML con login y CRUD
-- CSS modo oscuro moderno
-- JS con Watchdog y Interceptor 401
-- Credenciales desde /api/config (NO hardcodeadas)
+| Flujo | Descripcion | HU | Estado |
+|-------|-------------|-----|--------|
+| UAT-01 | Registro de alumno | HU-001 | Pendiente |
+| UAT-02 | Edicion de alumno | HU-003 | Pendiente |
+| UAT-03 | Eliminacion con confirmacion | HU-004 | Pendiente |
 
 ---
 
-## Archivos del Proyecto (Completo)
+## Estructura Actual del Proyecto
 
 ```
 app-prueba-didactica/
 |-- api/
 |   |-- __init__.py
-|   |-- index.py                 # Entry point
-|   |-- routes.py                # Endpoints + /api/config
+|   |-- index.py
+|   |-- routes.py
 |   |-- middleware/
 |       |-- __init__.py
-|       |-- auth.py              # @require_auth
+|       |-- auth.py
 |
 |-- application/
 |   |-- __init__.py
-|   |-- alumno_service.py        # Casos de uso
+|   |-- alumno_service.py
 |
 |-- domain/
 |   |-- __init__.py
-|   |-- exceptions.py            # Excepciones
+|   |-- exceptions.py
 |   |-- entities/
-|   |   |-- alumno.py            # Entidad
 |   |-- repositories/
-|       |-- alumno_repository.py # Interface + Mock
 |
 |-- infrastructure/
 |   |-- __init__.py
-|   |-- config.py                # Variables de entorno
-|   |-- supabase_client.py       # Singleton
+|   |-- config.py
+|   |-- supabase_client.py
 |   |-- supabase_alumno_repository.py
 |
 |-- database/
-|   |-- init.sql                 # Script BD
+|   |-- init.sql
 |
 |-- docs/
 |   |-- 01_planificacion_analisis.md
@@ -95,12 +86,20 @@ app-prueba-didactica/
 |   |-- 035_manual_bbdd.md
 |   |-- setup_externo.md
 |   |-- manual_requirements.md
+|   |-- plan_uat.md              # NUEVO
+|   |-- manual_testing.md        # NUEVO
 |   |-- CHECKPOINT.md
 |
 |-- static/
-|   |-- index.html               # Frontend
-|   |-- css/styles.css           # Estilos
-|   |-- js/app.js                # Logica
+|   |-- index.html
+|   |-- css/styles.css
+|   |-- js/app.js
+|
+|-- tests/                       # NUEVO
+|   |-- __init__.py
+|   |-- test_alumno.py
+|   |-- test_alumno_service.py
+|   |-- test_routes.py
 |
 |-- .env.example
 |-- .gitignore
@@ -113,42 +112,44 @@ app-prueba-didactica/
 
 ---
 
+## Comandos de Testing
+
+```powershell
+# Ejecutar todos los tests
+python -m pytest tests/ -v
+
+# Ejecutar con cobertura
+python -m pytest tests/ --cov=domain --cov=application
+
+# Ejecutar un archivo especifico
+python -m pytest tests/test_alumno.py -v
+```
+
+---
+
 ## Historial de Commits
 
 | Fecha | Hash | Mensaje |
 |-------|------|---------|
-| 2025-12-22 | a6dc3ca | docs: add initial planning (Phase 1-2) |
+| 2025-12-22 | a6dc3ca | docs: initial planning (Phase 1-2) |
 | 2025-12-22 | c45a2ed | docs: architecture patterns (Phase 3-A) |
 | 2025-12-22 | 53a5a57 | docs: data model (Phase 3-B) |
 | 2025-12-22 | 9e9d751 | docs: api specifications (Phase 3-C) |
 | 2025-12-22 | 7dee8b0 | feat: persistence strategy (Phase 3.5) |
 | 2025-12-22 | ed9c00d | feat: complete backend (Phase 4-A) |
-| 2025-12-22 | PENDIENTE | feat: frontend with secure config (Phase 4-B) |
+| 2025-12-22 | 19a6b98 | feat: frontend with secure config (Phase 4-B) |
+| 2025-12-22 | PENDIENTE | test: formalize unit tests and UAT plan |
 
 ---
 
-## Comandos Utiles
+## Paso Siguiente
 
-```powershell
-# Iniciar servidor local
-python api/index.py
-
-# Ejecutar tests
-python -m pytest tests/
-
-# Desplegar a Vercel
-vercel --prod
-```
+1. Ejecutar tests: `python -m pytest tests/ -v`
+2. Verificar todos verdes
+3. Ejecutar UAT manual
+4. Commit y push
 
 ---
 
-## Pendiente (Opcional)
-
-- [ ] Tests unitarios con pytest
-- [ ] Manuales tecnicos adicionales
-- [ ] Despliegue en Vercel/Docker
-
----
-
-> **PROYECTO COMPLETADO**  
-> Listo para pruebas y despliegue
+> **FASE 5 EN PROGRESO**  
+> Siguiente: Ejecutar pruebas de fuego
