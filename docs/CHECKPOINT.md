@@ -1,7 +1,7 @@
 # 🔖 CHECKPOINT - Estado del Proyecto
 
-> **Última Actualización**: 2025-12-22 21:58 (UTC-3)  
-> **Versión del Documento**: 1.0.0
+> **Última Actualización**: 2025-12-22 22:09 (UTC-3)  
+> **Versión del Documento**: 1.1.0
 
 ---
 
@@ -9,9 +9,9 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Fase Actual** | Fase 2 - Planificación Completada ✅ |
+| **Fase Actual** | Fase 3-A - Arquitectura y Patrones ✅ |
 | **Sprint** | Sprint 0 (Planificación) |
-| **Progreso General** | ██░░░░░░░░ 20% |
+| **Progreso General** | ███░░░░░░░ 30% |
 
 ---
 
@@ -42,21 +42,42 @@
 
 ---
 
+## 🏗️ Arquitectura Definida
+
+| Aspecto | Decisión |
+|---------|----------|
+| **Patrón Arquitectónico** | Clean Architecture (Simplificada) |
+| **Capas** | Presentación → Aplicación → Dominio ← Infraestructura |
+| **Patrones de Diseño** | Repository, DI, Factory, Singleton, Adapter, Decorator |
+| **Estado** | Stateless (JWT + Supabase) |
+| **Timeout Inactividad** | 15 minutos (Watchdog en Frontend) |
+
+---
+
 ## 📁 Archivos Generados
 
-### Fase 1-2 (Planificación)
+### Fase 1-2 (Planificación) ✅
 
 | Archivo | Descripción | Estado |
 |---------|-------------|--------|
-| `docs/01_planificacion_analisis.md` | Documento completo de planificación | ✅ Creado |
-| `docs/CHECKPOINT.md` | Este archivo de estado | ✅ Creado |
+| `docs/01_planificacion_analisis.md` | Requisitos, HU, CU, Riesgos | ✅ Completado |
+| `docs/CHECKPOINT.md` | Estado del proyecto | ✅ Actualizado |
+| `.gitignore` | Protección de archivos | ✅ Completado |
+
+### Fase 3-A (Arquitectura) ✅
+
+| Archivo | Descripción | Estado |
+|---------|-------------|--------|
+| `docs/02_a_arquitectura_patrones.md` | Arquitectura, patrones, stateless | ✅ Completado |
 
 ### Pendientes (Próximas Fases)
 
 | Archivo | Fase | Estado |
 |---------|------|--------|
-| `domain/entities/alumno.py` | 3 | ⏳ Pendiente |
-| `domain/repositories/alumno_repository.py` | 3 | ⏳ Pendiente |
+| `domain/entities/alumno.py` | 3-B | ⏳ Pendiente |
+| `domain/repositories/alumno_repository.py` | 3-B | ⏳ Pendiente |
+| `domain/exceptions.py` | 3-B | ⏳ Pendiente |
+| `infrastructure/supabase_client.py` | 4 | ⏳ Pendiente |
 | `infrastructure/supabase_alumno_repository.py` | 4 | ⏳ Pendiente |
 | `application/alumno_service.py` | 5 | ⏳ Pendiente |
 | `api/routes.py` | 6 | ⏳ Pendiente |
@@ -80,6 +101,8 @@
 | Auth Flow | Frontend → Supabase SDK | Backend solo valida JWT |
 | Arquitectura | Clean Architecture | Separación de responsabilidades |
 | Stateless | Obligatorio | Compatible con Vercel serverless |
+| Patrón Datos | Repository | Abstrae BD, permite mocks |
+| Inyección | Dependency Injection | Testeable y flexible |
 
 ---
 
@@ -94,14 +117,23 @@
 
 ---
 
+## 📋 Historial de Commits
+
+| Fecha | Commit | Archivos |
+|-------|--------|----------|
+| 2025-12-22 | `docs: add initial planning (Phase 1-2)` | `docs/01_planificacion_analisis.md`, `docs/CHECKPOINT.md`, `.gitignore` |
+| 2025-12-22 | `docs: architecture patterns (Phase 3-A)` | `docs/02_a_arquitectura_patrones.md`, `docs/CHECKPOINT.md` |
+
+---
+
 ## 🚀 Siguiente Paso Sugerido
 
-### Fase 3: Arquitectura y Capa de Dominio
+### Fase 3-B: Implementación de Capa de Dominio
 
 **Tareas a realizar**:
-1. Crear estructura de carpetas completa
-2. Implementar entidad `Alumno` con validaciones
-3. Crear interface abstracta del repository
+1. Implementar entidad `Alumno` con validaciones
+2. Crear interface abstracta del repository (ABC)
+3. Definir excepciones de dominio
 4. Escribir tests unitarios de la entidad
 
 **Archivos a generar**:
@@ -111,22 +143,16 @@ domain/
 ├── entities/
 │   ├── __init__.py
 │   └── alumno.py          # Clase Alumno con validaciones
-└── repositories/
-    ├── __init__.py
-    └── alumno_repository.py  # Interface ABC
+├── repositories/
+│   ├── __init__.py
+│   └── alumno_repository.py  # Interface ABC
+└── exceptions.py          # Excepciones de dominio
 ```
 
 **Prerequisitos**:
 - [x] Planificación completada
+- [x] Arquitectura definida
 - [ ] Aprobación del usuario para continuar
-
----
-
-## 📋 Historial de Cambios
-
-| Fecha | Fase | Cambios | Commit |
-|-------|------|---------|--------|
-| 2025-12-22 | 1-2 | Creación inicial de documentación de planificación | Pendiente |
 
 ---
 
@@ -138,6 +164,7 @@ domain/
 # Supabase (OBLIGATORIO - nunca hardcodear)
 SUPABASE_URL=https://[tu-proyecto].supabase.co
 SUPABASE_KEY=[tu-anon-key]
+SUPABASE_JWT_SECRET=[tu-jwt-secret]
 
 # Flask (opcional para desarrollo)
 FLASK_ENV=development
