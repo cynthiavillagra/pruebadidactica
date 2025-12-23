@@ -1,7 +1,7 @@
 # 🔖 CHECKPOINT - Estado del Proyecto
 
-> **Última Actualización**: 2025-12-22 22:17 (UTC-3)  
-> **Versión del Documento**: 1.2.0
+> **Última Actualización**: 2025-12-22 22:23 (UTC-3)  
+> **Versión del Documento**: 1.3.0
 
 ---
 
@@ -9,9 +9,42 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Fase Actual** | Fase 3-B - Modelado de Datos ✅ |
-| **Sprint** | Sprint 0 (Planificación/Diseño) |
-| **Progreso General** | ████░░░░░░ 40% |
+| **Fase Actual** | Fase 3-C - API y Dinámica ✅ |
+| **Sprint** | Sprint 0 (Planificación/Diseño) - COMPLETADO |
+| **Progreso General** | █████░░░░░ 50% |
+
+---
+
+## 🎯 Resumen de Diseño Completado
+
+### Documentación de Diseño
+
+| Fase | Documento | Contenido Principal | Estado |
+|------|-----------|---------------------|--------|
+| 1-2 | `01_planificacion_analisis.md` | Requisitos, HU, CU, Riesgos | ✅ |
+| 3-A | `02_a_arquitectura_patrones.md` | Clean Architecture, 7 patrones, Stateless | ✅ |
+| 3-B | `02_b_modelado_datos.md` | DER, SQL, Diagramas de clases | ✅ |
+| 3-C | `03_c_api_dinamica.md` | Endpoints, Secuencias, Seguridad | ✅ |
+
+### Arquitectura Definida
+
+| Aspecto | Decisión |
+|---------|----------|
+| **Arquitectura** | Clean Architecture (4 capas) |
+| **Patrones** | Repository, DI, Factory, Singleton, Adapter, Decorator |
+| **Estado** | Stateless (JWT + Supabase) |
+| **Seguridad** | Watchdog 15min + Interceptor 401 |
+
+### API Definida
+
+| Endpoint | Método | Trazabilidad |
+|----------|--------|--------------|
+| `/api/alumnos` | GET | HU-002 → CU-001 → RF-002 |
+| `/api/alumnos` | POST | HU-001 → CU-001 → RF-001, RF-005 |
+| `/api/alumnos/{id}` | GET | HU-002 → CU-001 → RF-002 |
+| `/api/alumnos/{id}` | PUT | HU-003 → CU-001.A → RF-003, RF-005 |
+| `/api/alumnos/{id}` | DELETE | HU-004 → CU-001.B → RF-004 |
+| `/api/health` | GET | Sistema |
 
 ---
 
@@ -42,54 +75,27 @@
 
 ---
 
-## 🏗️ Arquitectura y Modelado Definidos
+## 📁 Archivos del Proyecto
 
-### Arquitectura
-| Aspecto | Decisión |
-|---------|----------|
-| **Patrón Arquitectónico** | Clean Architecture (Simplificada) |
-| **Capas** | Presentación → Aplicación → Dominio ← Infraestructura |
-| **Patrones de Diseño** | Repository, DI, Factory, Singleton, Adapter, Decorator |
-| **Estado** | Stateless (JWT + Supabase) |
+### Documentación (Completada) ✅
 
-### Modelo de Datos
-| Aspecto | Decisión |
-|---------|----------|
-| **Entidad Principal** | `Alumno` (nombre, apellido, dni) |
-| **Identificador** | UUID v4 |
-| **Timestamps** | `created_at`, `updated_at` (UTC) |
-| **Seguridad BD** | RLS (Row Level Security) |
-
----
-
-## 📁 Archivos Generados
-
-### Fase 1-2 (Planificación) ✅
-
-| Archivo | Descripción | Estado |
+| Archivo | Descripción | Líneas |
 |---------|-------------|--------|
-| `docs/01_planificacion_analisis.md` | Requisitos, HU, CU, Riesgos | ✅ Completado |
-| `.gitignore` | Protección de archivos | ✅ Completado |
+| `docs/01_planificacion_analisis.md` | Requisitos, HU, CU, Riesgos | ~650 |
+| `docs/02_a_arquitectura_patrones.md` | Arquitectura, patrones, stateless | ~750 |
+| `docs/02_b_modelado_datos.md` | DER, SQL, Diagramas clases | ~850 |
+| `docs/03_c_api_dinamica.md` | Endpoints, Secuencias, Seguridad | ~950 |
+| `docs/CHECKPOINT.md` | Este archivo | ~200 |
+| `.gitignore` | Protección de archivos | ~60 |
 
-### Fase 3-A (Arquitectura) ✅
-
-| Archivo | Descripción | Estado |
-|---------|-------------|--------|
-| `docs/02_a_arquitectura_patrones.md` | Arquitectura, patrones, stateless | ✅ Completado |
-
-### Fase 3-B (Modelado) ✅
-
-| Archivo | Descripción | Estado |
-|---------|-------------|--------|
-| `docs/02_b_modelado_datos.md` | DER, SQL, Diagrama de clases | ✅ Completado |
-
-### Pendientes (Próximas Fases)
+### Código (Pendiente) ⏳
 
 | Archivo | Fase | Estado |
 |---------|------|--------|
 | `domain/entities/alumno.py` | 4 | ⏳ Pendiente |
 | `domain/repositories/alumno_repository.py` | 4 | ⏳ Pendiente |
 | `domain/exceptions.py` | 4 | ⏳ Pendiente |
+| `infrastructure/config.py` | 5 | ⏳ Pendiente |
 | `infrastructure/supabase_client.py` | 5 | ⏳ Pendiente |
 | `infrastructure/supabase_alumno_repository.py` | 5 | ⏳ Pendiente |
 | `application/alumno_service.py` | 6 | ⏳ Pendiente |
@@ -104,40 +110,29 @@
 
 ---
 
-## ✅ Decisiones Tomadas
-
-| Decisión | Opción Elegida | Justificación |
-|----------|----------------|---------------|
-| Framework Backend | Flask | Micro-framework didáctico |
-| Base de Datos | Supabase (PostgreSQL) | Gratuito, Auth incluido |
-| Frontend | Vanilla JS | Sin build tools |
-| Auth Flow | Frontend → Supabase SDK | Backend solo valida JWT |
-| Arquitectura | Clean Architecture | Separación de responsabilidades |
-| Stateless | Obligatorio | Compatible con serverless |
-| ID de Entidades | UUID v4 | Seguro, distribuido |
-| Timestamps | UTC | Consistencia global |
-
----
-
 ## 📋 Historial de Commits
 
-| Fecha | Commit | Archivos |
-|-------|--------|----------|
-| 2025-12-22 | `docs: add initial planning (Phase 1-2)` | `docs/01_planificacion_analisis.md`, `.gitignore` |
-| 2025-12-22 | `docs: architecture patterns (Phase 3-A)` | `docs/02_a_arquitectura_patrones.md` |
-| 2025-12-22 | `docs: data model and class diagrams (Phase 3-B)` | `docs/02_b_modelado_datos.md` |
+| Fecha | Hash | Mensaje |
+|-------|------|---------|
+| 2025-12-22 | `a6dc3ca` | `docs: add initial planning (Phase 1-2)` |
+| 2025-12-22 | `c45a2ed` | `docs: architecture patterns (Phase 3-A)` |
+| 2025-12-22 | `53a5a57` | `docs: data model and class diagrams (Phase 3-B)` |
+| 2025-12-22 | (pendiente) | `docs: api specifications and sequence diagrams (Phase 3-C)` |
 
 ---
 
 ## 🚀 Siguiente Paso Sugerido
 
-### Fase 4: Implementación de Capa de Dominio
+### Fase 4: Implementación del Dominio (Código Python)
+
+**Sprint 1 - Inicio de Implementación**
 
 **Tareas a realizar**:
-1. Implementar entidad `Alumno` con validaciones
-2. Crear interface abstracta del repository (ABC)
-3. Definir excepciones de dominio
-4. Escribir tests unitarios de la entidad
+1. Crear estructura de carpetas del código
+2. Implementar entidad `Alumno` con validaciones
+3. Crear interface abstracta del repository (ABC)
+4. Definir excepciones de dominio
+5. Escribir tests unitarios
 
 **Archivos a generar**:
 ```
@@ -145,46 +140,40 @@ domain/
 ├── __init__.py
 ├── entities/
 │   ├── __init__.py
-│   └── alumno.py          # Clase Alumno con validaciones
+│   └── alumno.py          # Entidad con validaciones
 ├── repositories/
 │   ├── __init__.py
 │   └── alumno_repository.py  # Interface ABC
-└── exceptions.py          # Excepciones de dominio
+└── exceptions.py          # Excepciones personalizadas
 
 tests/
 ├── __init__.py
-└── test_alumno.py         # Tests de la entidad
+└── test_alumno.py         # Tests unitarios
 ```
 
-**Prerequisitos**:
-- [x] Planificación completada
-- [x] Arquitectura definida
-- [x] Modelo de datos definido
-- [ ] Aprobación del usuario para continuar
+**Principios a seguir**:
+- La capa de dominio NO importa Flask ni Supabase
+- Cada archivo incluye `if __name__ == "__main__"` para testing atómico
+- Comentarios justificativos (POR QUÉ, no QUÉ)
+- Variables de entorno para toda configuración
 
 ---
 
-## 🔐 Configuración de Entorno
+## ✅ Checklist Pre-Implementación
 
-### Variables de Entorno Requeridas
-
-```env
-# Supabase (OBLIGATORIO - nunca hardcodear)
-SUPABASE_URL=https://[tu-proyecto].supabase.co
-SUPABASE_KEY=[tu-anon-key]
-SUPABASE_JWT_SECRET=[tu-jwt-secret]
-
-# Flask (opcional para desarrollo)
-FLASK_ENV=development
-FLASK_DEBUG=1
-```
-
-### Verificación de Supabase
-
-- [x] Proyecto creado en Supabase
-- [x] Tabla `alumnos` creada con schema
-- [ ] RLS (Row Level Security) configurado
-- [ ] Variables de entorno configuradas localmente
+- [x] Requisitos funcionales definidos (MoSCoW)
+- [x] Requisitos no funcionales definidos
+- [x] Historias de usuario con criterios de aceptación
+- [x] Casos de uso documentados
+- [x] Arquitectura Clean Architecture definida
+- [x] Patrones de diseño especificados
+- [x] Estrategia stateless documentada
+- [x] Modelo de datos (DER) definido
+- [x] Diagrama de clases completo
+- [x] Endpoints API con trazabilidad
+- [x] Diagramas de secuencia
+- [x] Seguridad (watchdog, interceptor) especificada
+- [ ] Código de implementación
 
 ---
 
@@ -194,9 +183,10 @@ FLASK_DEBUG=1
 |-------|-------|
 | **URL** | https://github.com/cynthiavillagra/pruebadidactica |
 | **Rama Principal** | `main` |
-| **Estado** | ✅ Sincronizado |
+| **Estado** | Sincronizar con `git push` |
 
 ---
 
-> **Instrucción**: Actualizar este archivo al completar cada fase.  
-> **Formato de commit**: `docs: update checkpoint - fase N completada`
+> **DISEÑO COMPLETADO** ✅  
+> Sprint 0 (Planificación/Diseño) finalizado.  
+> Listo para Sprint 1 (Implementación) pendiente aprobación.
