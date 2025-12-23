@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="App Didactica CRUD de Alumnos - Sistema de gestion educativo">
+    <title>App Didactica - Gestion de Alumnos</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📚</text></svg>">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Supabase JS SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Estilos -->
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+    <!-- ================================================================== -->
+    <!-- MODAL DE SESION EXPIRADA -->
+    <!-- ================================================================== -->
+    <div id="modal-sesion-expirada" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-icon">⏰</div>
+            <h2>Sesion Expirada</h2>
+            <p>Su sesion ha expirado por inactividad.</p>
+            <p>Por favor, inicie sesion nuevamente.</p>
+            <button id="btn-modal-login" class="btn btn-primary">
+                Iniciar Sesion
+            </button>
+        </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- MODAL DE CONFIRMACION DE ELIMINACION -->
+    <!-- ================================================================== -->
+    <div id="modal-confirmar-eliminar" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-icon">⚠️</div>
+            <h2>Confirmar Eliminacion</h2>
+            <p id="mensaje-eliminar">¿Esta seguro de eliminar este alumno?</p>
+            <div class="modal-actions">
+                <button id="btn-cancelar-eliminar" class="btn btn-secondary">
+                    Cancelar
+                </button>
+                <button id="btn-confirmar-eliminar" class="btn btn-danger">
+                    Si, Eliminar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- PANTALLA DE LOGIN -->
+    <!-- ================================================================== -->
+    <div id="pantalla-login" class="pantalla">
+        <div class="login-container">
+            <div class="login-header">
+                <div class="logo">📚</div>
+                <h1>App Didactica</h1>
+                <p>Sistema de Gestion de Alumnos</p>
+            </div>
+            
+            <form id="form-login" class="login-form">
+                <div class="form-group">
+                    <label for="login-email">Email</label>
+                    <input 
+                        type="email" 
+                        id="login-email" 
+                        placeholder="tu@email.com"
+                        required
+                        autocomplete="email"
+                    >
+                </div>
+                
+                <div class="form-group">
+                    <label for="login-password">Contrasena</label>
+                    <input 
+                        type="password" 
+                        id="login-password" 
+                        placeholder="••••••••"
+                        required
+                        autocomplete="current-password"
+                    >
+                </div>
+                
+                <div id="login-error" class="error-message" style="display: none;"></div>
+                
+                <button type="submit" class="btn btn-primary btn-full">
+                    <span class="btn-text">Iniciar Sesion</span>
+                    <span class="btn-loading" style="display: none;">Cargando...</span>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p>Proyecto educativo - No usar en produccion</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================== -->
+    <!-- PANTALLA PRINCIPAL (CRUD) -->
+    <!-- ================================================================== -->
+    <div id="pantalla-principal" class="pantalla" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-small">📚</div>
+                <span>App Didactica</span>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="alumnos">
+                    <span class="nav-icon">👥</span>
+                    <span class="nav-text">Alumnos</span>
+                </a>
+                <a href="#" class="nav-item" data-section="docs">
+                    <span class="nav-icon">📖</span>
+                    <span class="nav-text">Documentacion</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span class="user-icon">👤</span>
+                    <span id="user-email" class="user-email">usuario@email.com</span>
+                </div>
+                <button id="btn-logout" class="btn-logout">
+                    <span>🚪</span> Cerrar Sesion
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-left">
+                    <button id="btn-toggle-sidebar" class="btn-icon">☰</button>
+                    <h2 id="page-title">Gestion de Alumnos</h2>
+                </div>
+                <div class="header-right">
+                    <div class="session-indicator">
+                        <span class="session-dot"></span>
+                        <span id="session-timer">15:00</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Seccion Alumnos -->
+            <section id="seccion-alumnos" class="content-section">
+                <!-- Toolbar -->
+                <div class="toolbar">
+                    <button id="btn-nuevo-alumno" class="btn btn-primary">
+                        <span>➕</span> Nuevo Alumno
+                    </button>
+                    <button id="btn-refrescar" class="btn btn-secondary">
+                        <span>🔄</span> Refrescar
+                    </button>
+                </div>
+
+                <!-- Formulario de Alumno -->
+                <div id="form-container" class="card form-card" style="display: none;">
+                    <div class="card-header">
+                        <h3 id="form-titulo">Nuevo Alumno</h3>
+                        <button id="btn-cerrar-form" class="btn-icon">✕</button>
+                    </div>
+                    <form id="form-alumno" class="form-alumno">
+                        <input type="hidden" id="alumno-id">
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="alumno-nombre">Nombre *</label>
+                                <input 
+                                    type="text" 
+                                    id="alumno-nombre" 
+                                    placeholder="Ej: Juan"
+                                    required
+                                    maxlength="100"
+                                >
+                            </div>
+                            <div class="form-group">
+                                <label for="alumno-apellido">Apellido *</label>
+                                <input 
+                                    type="text" 
+                                    id="alumno-apellido" 
+                                    placeholder="Ej: Perez"
+                                    required
+                                    maxlength="100"
+                                >
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="alumno-dni">DNI *</label>
+                            <input 
+                                type="text" 
+                                id="alumno-dni" 
+                                placeholder="Ej: 12345678"
+                                required
+                                maxlength="20"
+                            >
+                        </div>
+                        
+                        <div id="form-error" class="error-message" style="display: none;"></div>
+                        
+                        <div class="form-actions">
+                            <button type="button" id="btn-cancelar" class="btn btn-secondary">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <span class="btn-text">Guardar</span>
+                                <span class="btn-loading" style="display: none;">Guardando...</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabla de Alumnos -->
+                <div class="card">
+                    <div class="table-container">
+                        <table id="tabla-alumnos" class="table">
+                            <thead>
+                                <tr>
+                                    <th>Apellido</th>
+                                    <th>Nombre</th>
+                                    <th>DNI</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-alumnos">
+                                <!-- Se llena dinamicamente -->
+                            </tbody>
+                        </table>
+                        
+                        <div id="tabla-loading" class="table-loading">
+                            <div class="spinner"></div>
+                            <p>Cargando alumnos...</p>
+                        </div>
+                        
+                        <div id="tabla-vacia" class="table-empty" style="display: none;">
+                            <div class="empty-icon">📭</div>
+                            <p>No hay alumnos registrados</p>
+                            <button class="btn btn-primary" onclick="App.mostrarFormulario()">
+                                Agregar Primer Alumno
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seccion Documentacion -->
+            <section id="seccion-docs" class="content-section" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Documentacion del Proyecto</h3>
+                    </div>
+                    <div class="docs-list">
+                        <a href="https://github.com/cynthiavillagra/pruebadidactica/blob/main/docs/01_planificacion_analisis.md" target="_blank" class="doc-item">
+                            <span class="doc-icon">📋</span>
+                            <div class="doc-info">
+                                <span class="doc-title">Planificacion y Analisis</span>
+                                <span class="doc-desc">Requisitos, Historias de Usuario, Casos de Uso</span>
+                            </div>
+                        </a>
+                        <a href="https://github.com/cynthiavillagra/pruebadidactica/blob/main/docs/02_a_arquitectura_patrones.md" target="_blank" class="doc-item">
+                            <span class="doc-icon">🏗️</span>
+                            <div class="doc-info">
+                                <span class="doc-title">Arquitectura y Patrones</span>
+                                <span class="doc-desc">Clean Architecture, Patrones de Diseno</span>
+                            </div>
+                        </a>
+                        <a href="https://github.com/cynthiavillagra/pruebadidactica/blob/main/docs/02_b_modelado_datos.md" target="_blank" class="doc-item">
+                            <span class="doc-icon">📊</span>
+                            <div class="doc-info">
+                                <span class="doc-title">Modelado de Datos</span>
+                                <span class="doc-desc">DER, Diagrama de Clases, SQL</span>
+                            </div>
+                        </a>
+                        <a href="https://github.com/cynthiavillagra/pruebadidactica/blob/main/docs/03_c_api_dinamica.md" target="_blank" class="doc-item">
+                            <span class="doc-icon">🔌</span>
+                            <div class="doc-info">
+                                <span class="doc-title">Especificacion API</span>
+                                <span class="doc-desc">Endpoints, Diagramas de Secuencia</span>
+                            </div>
+                        </a>
+                        <a href="https://github.com/cynthiavillagra/pruebadidactica/blob/main/docs/035_manual_bbdd.md" target="_blank" class="doc-item">
+                            <span class="doc-icon">🗄️</span>
+                            <div class="doc-info">
+                                <span class="doc-title">Manual de Base de Datos</span>
+                                <span class="doc-desc">Configuracion Supabase, RLS</span>
+                            </div>
+                        </a>
+                        <a href="https://github.com/cynthiavillagra/pruebadidactica/blob/main/README.md" target="_blank" class="doc-item">
+                            <span class="doc-icon">📖</span>
+                            <div class="doc-info">
+                                <span class="doc-title">README</span>
+                                <span class="doc-desc">Instalacion, Uso, Licencia</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- JavaScript -->
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

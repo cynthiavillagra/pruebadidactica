@@ -72,6 +72,29 @@ def health_check():
     }), 200
 
 
+@api_bp.route('/config', methods=['GET'])
+def get_config():
+    """
+    Endpoint para obtener configuracion publica del frontend.
+    
+    POR QUE ESTE ENDPOINT:
+    - Las credenciales NO deben estar hardcodeadas en el JS
+    - El frontend las obtiene dinamicamente
+    - SUPABASE_URL y SUPABASE_KEY (anon) son PUBLICAS por diseno
+    - El secreto real (JWT_SECRET) NUNCA se expone aqui
+    
+    Returns:
+        200 OK con configuracion publica
+    """
+    import os
+    
+    return jsonify({
+        'supabase_url': os.getenv('SUPABASE_URL', ''),
+        'supabase_key': os.getenv('SUPABASE_KEY', ''),
+        'session_timeout': int(os.getenv('SESSION_TIMEOUT_SECONDS', '900'))
+    }), 200
+
+
 # ===========================================================================
 # ENDPOINTS CRUD (Protegidos)
 # ===========================================================================
