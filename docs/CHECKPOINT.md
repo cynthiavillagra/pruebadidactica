@@ -1,7 +1,7 @@
 # 🔖 CHECKPOINT - Estado del Proyecto
 
-> **Última Actualización**: 2025-12-22 22:23 (UTC-3)  
-> **Versión del Documento**: 1.3.0
+> **Última Actualización**: 2025-12-22 22:32 (UTC-3)  
+> **Versión del Documento**: 1.4.0
 
 ---
 
@@ -9,42 +9,35 @@
 
 | Campo | Valor |
 |-------|-------|
-| **Fase Actual** | Fase 3-C - API y Dinámica ✅ |
-| **Sprint** | Sprint 0 (Planificación/Diseño) - COMPLETADO |
-| **Progreso General** | █████░░░░░ 50% |
+| **Fase Actual** | Fase 3.5 - Estrategia de Persistencia ✅ |
+| **Sprint** | Sprint 0 (Diseño) - COMPLETADO |
+| **Progreso General** | ██████░░░░ 55% |
 
 ---
 
-## 🎯 Resumen de Diseño Completado
+## 🎯 Diseño Completado
 
 ### Documentación de Diseño
 
 | Fase | Documento | Contenido Principal | Estado |
 |------|-----------|---------------------|--------|
 | 1-2 | `01_planificacion_analisis.md` | Requisitos, HU, CU, Riesgos | ✅ |
-| 3-A | `02_a_arquitectura_patrones.md` | Clean Architecture, 7 patrones, Stateless | ✅ |
-| 3-B | `02_b_modelado_datos.md` | DER, SQL, Diagramas de clases | ✅ |
+| 3-A | `02_a_arquitectura_patrones.md` | Clean Architecture, 7 patrones | ✅ |
+| 3-B | `02_b_modelado_datos.md` | DER, SQL, Diagramas clases | ✅ |
 | 3-C | `03_c_api_dinamica.md` | Endpoints, Secuencias, Seguridad | ✅ |
+| 3.5 | `035_manual_bbdd.md` | Manual Supabase completo | ✅ |
+| 3.5 | `database/init.sql` | Script inicialización BD | ✅ |
 
-### Arquitectura Definida
+### Persistencia Configurada
 
 | Aspecto | Decisión |
 |---------|----------|
-| **Arquitectura** | Clean Architecture (4 capas) |
-| **Patrones** | Repository, DI, Factory, Singleton, Adapter, Decorator |
-| **Estado** | Stateless (JWT + Supabase) |
-| **Seguridad** | Watchdog 15min + Interceptor 401 |
-
-### API Definida
-
-| Endpoint | Método | Trazabilidad |
-|----------|--------|--------------|
-| `/api/alumnos` | GET | HU-002 → CU-001 → RF-002 |
-| `/api/alumnos` | POST | HU-001 → CU-001 → RF-001, RF-005 |
-| `/api/alumnos/{id}` | GET | HU-002 → CU-001 → RF-002 |
-| `/api/alumnos/{id}` | PUT | HU-003 → CU-001.A → RF-003, RF-005 |
-| `/api/alumnos/{id}` | DELETE | HU-004 → CU-001.B → RF-004 |
-| `/api/health` | GET | Sistema |
+| **Tipo** | Base de Datos SQL |
+| **Proveedor** | Supabase (PostgreSQL 15+) |
+| **Tabla** | `alumnos` (6 campos) |
+| **Seguridad** | RLS habilitado (solo authenticated) |
+| **Trigger** | Auto-update de `updated_at` |
+| **Índices** | 5 índices (id, dni, apellido, combinados) |
 
 ---
 
@@ -66,12 +59,13 @@
 | Lógica | JavaScript ES6+ |
 | Auth SDK | Supabase JS |
 
-### Infraestructura
-| Servicio | Proveedor | Tier |
-|----------|-----------|------|
-| Base de Datos | Supabase (PostgreSQL) | Free |
-| Autenticación | Supabase Auth | Free |
-| Hosting | Vercel / Local / Docker | Free |
+### Base de Datos
+| Componente | Tecnología |
+|------------|------------|
+| Proveedor | Supabase |
+| Motor | PostgreSQL 15+ |
+| Seguridad | Row Level Security |
+| Backup | Automático (Supabase) |
 
 ---
 
@@ -82,11 +76,17 @@
 | Archivo | Descripción | Líneas |
 |---------|-------------|--------|
 | `docs/01_planificacion_analisis.md` | Requisitos, HU, CU, Riesgos | ~650 |
-| `docs/02_a_arquitectura_patrones.md` | Arquitectura, patrones, stateless | ~750 |
+| `docs/02_a_arquitectura_patrones.md` | Arquitectura, patrones | ~750 |
 | `docs/02_b_modelado_datos.md` | DER, SQL, Diagramas clases | ~850 |
 | `docs/03_c_api_dinamica.md` | Endpoints, Secuencias, Seguridad | ~950 |
+| `docs/035_manual_bbdd.md` | Manual Supabase | ~500 |
 | `docs/CHECKPOINT.md` | Este archivo | ~200 |
-| `.gitignore` | Protección de archivos | ~60 |
+
+### Base de Datos (Completada) ✅
+
+| Archivo | Descripción | Estado |
+|---------|-------------|--------|
+| `database/init.sql` | Script de inicialización | ✅ |
 
 ### Código (Pendiente) ⏳
 
@@ -117,24 +117,49 @@
 | 2025-12-22 | `a6dc3ca` | `docs: add initial planning (Phase 1-2)` |
 | 2025-12-22 | `c45a2ed` | `docs: architecture patterns (Phase 3-A)` |
 | 2025-12-22 | `53a5a57` | `docs: data model and class diagrams (Phase 3-B)` |
-| 2025-12-22 | (pendiente) | `docs: api specifications and sequence diagrams (Phase 3-C)` |
+| 2025-12-22 | `9e9d751` | `docs: api specifications and sequence diagrams (Phase 3-C)` |
+| 2025-12-22 | (pendiente) | `feat: persistence strategy configuration (Phase 3.5)` |
+
+---
+
+## ✅ Checklist Pre-Implementación
+
+### Diseño ✅
+- [x] Requisitos funcionales definidos (MoSCoW)
+- [x] Requisitos no funcionales definidos
+- [x] Historias de usuario con criterios de aceptación
+- [x] Casos de uso documentados
+- [x] Arquitectura Clean Architecture definida
+- [x] Patrones de diseño especificados
+- [x] Estrategia stateless documentada
+- [x] Modelo de datos (DER) definido
+- [x] Diagrama de clases completo
+- [x] Endpoints API con trazabilidad
+- [x] Diagramas de secuencia
+- [x] Seguridad especificada
+
+### Persistencia ✅
+- [x] Script SQL de inicialización
+- [x] Row Level Security configurado
+- [x] Manual de base de datos
+- [x] Trigger de updated_at
+- [x] Índices optimizados
+
+### Pendiente ⏳
+- [ ] Código de implementación
+- [ ] Tests unitarios
+- [ ] Tests de integración
+- [ ] Configuración Vercel
+- [ ] Dockerfile
 
 ---
 
 ## 🚀 Siguiente Paso Sugerido
 
-### Fase 4: Implementación del Dominio (Código Python)
+### Fase 4: Implementación del Dominio
 
-**Sprint 1 - Inicio de Implementación**
+**Sprint 1: Capa de Dominio (Python)**
 
-**Tareas a realizar**:
-1. Crear estructura de carpetas del código
-2. Implementar entidad `Alumno` con validaciones
-3. Crear interface abstracta del repository (ABC)
-4. Definir excepciones de dominio
-5. Escribir tests unitarios
-
-**Archivos a generar**:
 ```
 domain/
 ├── __init__.py
@@ -151,30 +176,6 @@ tests/
 └── test_alumno.py         # Tests unitarios
 ```
 
-**Principios a seguir**:
-- La capa de dominio NO importa Flask ni Supabase
-- Cada archivo incluye `if __name__ == "__main__"` para testing atómico
-- Comentarios justificativos (POR QUÉ, no QUÉ)
-- Variables de entorno para toda configuración
-
----
-
-## ✅ Checklist Pre-Implementación
-
-- [x] Requisitos funcionales definidos (MoSCoW)
-- [x] Requisitos no funcionales definidos
-- [x] Historias de usuario con criterios de aceptación
-- [x] Casos de uso documentados
-- [x] Arquitectura Clean Architecture definida
-- [x] Patrones de diseño especificados
-- [x] Estrategia stateless documentada
-- [x] Modelo de datos (DER) definido
-- [x] Diagrama de clases completo
-- [x] Endpoints API con trazabilidad
-- [x] Diagramas de secuencia
-- [x] Seguridad (watchdog, interceptor) especificada
-- [ ] Código de implementación
-
 ---
 
 ## 🔗 Repositorio Remoto
@@ -187,6 +188,29 @@ tests/
 
 ---
 
+## 📊 Resumen de Progreso
+
+```
+SPRINT 0 - DISEÑO:
+├── Fase 1-2: Planificación     ████████████ 100% ✅
+├── Fase 3-A: Arquitectura      ████████████ 100% ✅
+├── Fase 3-B: Modelado          ████████████ 100% ✅
+├── Fase 3-C: API y Dinámica    ████████████ 100% ✅
+└── Fase 3.5: Persistencia      ████████████ 100% ✅
+
+SPRINT 1 - IMPLEMENTACIÓN:
+├── Fase 4: Dominio             ░░░░░░░░░░░░   0% ⏳
+├── Fase 5: Infraestructura     ░░░░░░░░░░░░   0% ⏳
+├── Fase 6: Aplicación          ░░░░░░░░░░░░   0% ⏳
+├── Fase 7: API                 ░░░░░░░░░░░░   0% ⏳
+├── Fase 8: Frontend            ░░░░░░░░░░░░   0% ⏳
+├── Fase 9: Testing             ░░░░░░░░░░░░   0% ⏳
+└── Fase 10: Deploy             ░░░░░░░░░░░░   0% ⏳
+
+TOTAL PROYECTO:                 ██████░░░░░░ 55%
+```
+
+---
+
 > **DISEÑO COMPLETADO** ✅  
-> Sprint 0 (Planificación/Diseño) finalizado.  
-> Listo para Sprint 1 (Implementación) pendiente aprobación.
+> Sprint 0 finalizado. Listo para Sprint 1 (Implementación).
